@@ -54,6 +54,7 @@ vcs.xml
 .Spotlight-V100
 .Trashes
 ehthumbs.db
+<<<<<<< Updated upstream
 Thumbs.db
 
 # Version control
@@ -66,3 +67,6 @@ lint/outputs/
 lint/tmp/
 lint/reports/
 
+=======
+Thumbs.db
+>>>>>>> Stashed changes
