@@ -17,3 +17,4 @@ class TextMessage(
                 "${if (isIncoming) "получил" else "отправил"} сообщение \"$text\" ${date.humanizeDiff()}"
 
 }
+

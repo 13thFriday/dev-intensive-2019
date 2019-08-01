@@ -2,19 +2,16 @@ package ru.skillbranch.devintensive.utils
 
 import ru.skillbranch.devintensive.extensions.TimeUnits
 
-
 object Utils {
-
-    fun parseFullName(fullName: String?): Pair<String?, String?> {
-        val parts: List<String>? = fullName?.split(" ")
+    fun parseFullName(fullName:String?):Pair<String?, String?>{
+        val parts : List<String>? = fullName?.split(" ")
         var firstName = parts?.getOrNull(0)
         if (firstName.isNullOrEmpty()) firstName = null
         var lastName = parts?.getOrNull(1)
         if (lastName.isNullOrEmpty()) lastName = null
-        return firstName to lastName
+        return Pair(firstName, lastName)
     }
-
-    fun transliteration(payload: String, divider: String = " "): String? {
+    fun transliteration(payload: String, divider:String = " "):String{
         val chars = mapOf(
             "а" to "a",
             "б" to "b",
@@ -53,15 +50,13 @@ object Utils {
 
         var result = ""
         payload.replace(" ", divider)
-//            .toCharArray()
             .forEach {
                 val symbol = if(!chars[(it.toString().toLowerCase())].isNullOrEmpty()) chars[(it.toString().toLowerCase())] else it.toString()
                 result += if (it.isUpperCase()) symbol?.capitalize() else symbol
             }
         return result
     }
-
-    fun toInitials(firstName: String?, lastName: String?): String? {
+    fun toInitials(firstName:String?, lastName:String?): String? {
         firstName?.trim()
         lastName?.trim()
         return when {
@@ -77,17 +72,6 @@ object Utils {
             else -> firstName?.substring(0, 1)?.toUpperCase() + lastName?.substring(0, 1)?.toUpperCase()
         }
     }
-
-//    fun plurals(i: Long, timeunit: TimeUnits, context: Context): String {
-//        val j: Int = i.toInt()%100
-//        return when (timeunit) {
-//            TimeUnits.SECOND -> context.resources.getQuantityString(R.plurals.seconds_plur, j, j)
-//            TimeUnits.MINUTE -> context.resources.getQuantityString(R.plurals.minutes_plur, j, j)
-//            TimeUnits.HOUR -> context.resources.getQuantityString(R.plurals.hours_plur, j, j)
-//            TimeUnits.DAY -> context.resources.getQuantityString(R.plurals.days_plur, j, j)
-//        }
-//    }
-
     fun plurals(i: Long, timeunit: TimeUnits): String {
 
         val j = i % 10

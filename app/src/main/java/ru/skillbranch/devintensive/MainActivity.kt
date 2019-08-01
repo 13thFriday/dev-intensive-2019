@@ -3,9 +3,9 @@ package ru.skillbranch.devintensive
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.text.InputType
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -13,19 +13,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import ru.skillbranch.devintensive.models.Bender
-import android.widget.TextView.OnEditorActionListener
 import ru.skillbranch.devintensive.extensions.hideKeyboard
-
+import ru.skillbranch.devintensive.models.Bender
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-
-
     lateinit var benderImage: ImageView
     lateinit var textTxt: TextView
-    lateinit var messageEt: EditText
+    lateinit var messageET: EditText
     lateinit var sendBtn: ImageView
-
     lateinit var benderObj: Bender
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,14 +29,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         benderImage = iv_bender
         textTxt = tv_text
-        messageEt = et_message
+        messageET = et_message
         sendBtn = iv_send
 
-        messageEt.imeOptions = EditorInfo.IME_ACTION_DONE
-        messageEt.setRawInputType(InputType.TYPE_CLASS_TEXT)
-        messageEt.setSingleLine()
+        messageET.imeOptions = EditorInfo.IME_ACTION_DONE
+        messageET.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        messageET.setSingleLine()
 
-        messageEt.setOnEditorActionListener { v, actionId, event ->
+        messageET.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 handleOnClickSend()
                 hideKeyboard()
@@ -54,39 +49,65 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val question = savedInstanceState?.getString("QUESTION") ?: Bender.Question.NAME.name
         benderObj = Bender(Bender.Status.valueOf(status), Bender.Question.valueOf(question))
 
-        Log.d("M_MainActivity", "onCreate")
+        Log.d("M_MainActivity", "onCreate $status $question")
+
         val (r, g, b) = benderObj.status.color
         benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
 
         textTxt.text = benderObj.askQuestion()
         sendBtn.setOnClickListener(this)
 
+    }
 
+    override fun onRestart() {
+        super.onRestart()
+        Log.d("M_MainActivity", "onRestart")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("M_MainActivity", "onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("M_MainActivity", "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("M_MainActivity", "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("M_MainActivity", "onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("M_MainActivity", "onDestroy")
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
+
         outState?.putString("STATUS", benderObj.status.name)
         outState?.putString("QUESTION", benderObj.question.name)
         Log.d("M_MainActivity", "onSaveInstanceState ${benderObj.status.name} ${benderObj.question.name}")
     }
 
     private fun handleOnClickSend() {
-        val validation = benderObj.validationCheck(messageEt.text.toString())
-        if (benderObj.validationCheck(messageEt.text.toString()) == Bender.Validation.OK) {
-            val (phrase, color) = benderObj.listenAnswer(messageEt.text.toString().toLowerCase())
-            messageEt.setText("")
+        val validation = benderObj.validationCheck(messageET.text.toString())
+        if (benderObj.validationCheck(messageET.text.toString()) == Bender.Validation.OK) {
+            val (phrase, color) = benderObj.listenAnswer(messageET.text.toString().toLowerCase())
+            messageET.setText("")
             val (r, g, b) = color
             benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
             textTxt.text = phrase
         } else {
             textTxt.text = "${validation.msg}\n${benderObj.askQuestion()}"
         }
-//        val (phrase, color) = benderObj.listenAnswer(messageEt.text.toString().toLowerCase())
-//        messageEt.setText("")
-//        val (r, g, b) = color
-//        benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
-//        textTxt.text = phrase
     }
 
     override fun onClick(v: View?) {
@@ -95,3 +116,4 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 }
+
