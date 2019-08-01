@@ -22,7 +22,7 @@ class Bender(var status:Status = Status.NORMAL, var question: Question = Questio
             countIncorrectAnswers++
             if (countIncorrectAnswers < 3) {
                 status = status.nextStatus()
-                "Это не правильный ответ\n${question.question}" to status.color
+                "Это неправильный ответ\n${question.question}" to status.color
             }else{
                 question = Question.NAME
                 status = Status.NORMAL
@@ -47,13 +47,13 @@ class Bender(var status:Status = Status.NORMAL, var question: Question = Questio
     }
 
     enum class Question(val question: String, val answers: List<String>){
-        NAME("Как меня зовут?", listOf("бендер","bender")){
+        NAME("Как меня зовут?", listOf("бендер", "bender")) {
             override fun nextQuestion(): Question = PROFESSION
         },
         PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")){
             override fun nextQuestion(): Question = MATERIAL
         },
-        MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "wood")){
+        MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")){
             override fun nextQuestion(): Question = BDAY
         },
         BDAY("Когда меня создали?", listOf("2993")){
@@ -66,7 +66,8 @@ class Bender(var status:Status = Status.NORMAL, var question: Question = Questio
             override fun nextQuestion(): Question = IDLE
         };
 
-        abstract fun nextQuestion():Question
+        abstract fun nextQuestion(): Question
+
     }
     fun validationCheck(data: String): Validation{
         return when (question) {
